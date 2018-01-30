@@ -28,11 +28,6 @@ resource "google_container_cluster" "primary" {
       command = "gcloud container clusters update ${google_container_cluster.primary.name} --zone ${var.region} --enable-autoscaling --min-nodes=${var.min_nodes} --max-nodes=${var.max_nodes} --project='${var.project_name}'"
   }
 
-  // additional_zones = [
-  //   "us-central1-b",
-  //   "us-central1-c",
-  // ]
-
   master_auth {
       username = "${var.linux_admin_username}"
       password = "${var.linux_admin_password}}"
