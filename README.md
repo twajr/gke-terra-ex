@@ -9,7 +9,8 @@ The code below shows how the google cloud credentials are loaded. Put your accou
 provider "google" {
   credentials = "${file("~/.gcloud/account.json")}"
   ...
-}```
+}
+```
 
 The linux passwords for access to the master node are also stored in a terraform variable file noted below.
 
