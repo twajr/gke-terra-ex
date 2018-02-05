@@ -1,7 +1,11 @@
 
 variable "region" {
+  default = "us-central1"
+}
+variable "zone" {
   default = "us-central1-a"
 }
+
 variable "min_nodes" {
   default = "1"
 }
@@ -13,19 +17,20 @@ variable "linux_admin_username" {}
 variable "linux_admin_password" {}
 
 provider "google" {
-  credentials = "${file("~/.gcloud/account.json")}"
+  credentials = "${file("~/.gcloud/OneHQ.json")}"
   project     = "${var.project_name}"
   region      = "${var.region}"
+  zone        = "${var.zone}$"
 }
 
 resource "google_container_cluster" "primary" {
   name = "first-cluster"
-  zone = "${var.region}"
+  zone = "${var.zone}"
   initial_node_count = 1
 
   # enable autoscaling
   provisioner "local-exec" {
-      command = "gcloud container clusters update ${google_container_cluster.primary.name} --zone ${var.region} --enable-autoscaling --min-nodes=${var.min_nodes} --max-nodes=${var.max_nodes} --project='${var.project_name}'"
+      command = "gcloud container clusters update ${google_container_cluster.primary.name} --zone ${var.zone} --enable-autoscaling --min-nodes=${var.min_nodes} --max-nodes=${var.max_nodes} --project='${var.project_name}'"
   }
 
   master_auth {

@@ -33,13 +33,45 @@ project_name = "your-project-name"
 min_nodes = "1"
 max_nodes = "3"
 ```
-
 Running the terraform plan and apply goes something like this:
 ```
 terraform plan \
  -var-file="terraform.tfvars" \
  -var-file="~/.gcloud/gke-secrets.tfvars"
 ```
+### Associating kubectl to the cluster
+Use gcloud to make sure the config defaults are accurate, and get the cluster credentials.
+```
+gcloud config set project 'your-project-id'
+gcloud config set compute/zone us-central1-a
+gcloud container clusters get-credentials 'cluster-name'
+
+```
+### Creating secrets
+Say that some pods need to access a database. The username and password that the pods should use is in the files ./username.txt and ./password.txt on your local machine.
+
+```
+$ echo -n "admin" > ./username.txt
+$ echo -n "1f2d1e2e67df" > ./password.txt
+```
+The kubectl create secret command packages these files into a Secret and creates the object on the Apiserver.
+
+```
+$ kubectl create secret generic db-user-pass \
+  --from-file=./username.txt --from-file=./password.txt
+secret "db-user-pass" created
+```
+### Docker Build HelloNode
+export your project id:
+```
+export PROJECT_ID="$(gcloud config get-value project -q)"
+```
+Build the docker image and push to your project's gcr:
+```
+docker build -t gcr.io/${PROJECT_ID}/hello-app:v1 .
+gcloud docker -- push gcr.io/${PROJECT_ID}/hello-app:v1
+```
+
 
 ### gcloud example commands
 ```
@@ -55,7 +87,6 @@ kubectl cluster-info
 kubectl describe pods
 kubectl get pods --all-namespaces
 kubectl get services
-kubectl get ingress -o wide
 kubectl describe nodes
 kubectl run hello-web --image=gcr.io/${PROJECT_ID}/hello-app:v1 \
     --port 8080
