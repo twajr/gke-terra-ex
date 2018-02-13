@@ -49,17 +49,17 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-// resource "google_dns_managed_zone" "oneHQ" {
-//   name        = "oneHQ-com"
-//   dns_name    = "oneHQ.com."
-//   description = "oneHQ.com DNS zone"
+// resource "google_dns_managed_zone" "HQ" {
+//   name        = "HQ-com"
+//   dns_name    = "HQ.com."
+//   description = "HQ.com DNS zone"
 // }
 // resource "google_dns_record_set" "dev-k8s-endpoint-oneHQ" {
-//   name  = "k8s.dev.${google_dns_managed_zone.oneHQ.dns_name}"
+//   name  = "k8s.dev.${google_dns_managed_zone.HQ.dns_name}"
 //   type  = "A"
 //   ttl   = 300
 //
-//   managed_zone = "${google_dns_managed_zone.oneHQ.name}"
+//   managed_zone = "${google_dns_managed_zone.HQ.name}"
 //
 //   rrdatas = ["${google_container_cluster.primary.endpoint}"]
 // }
