@@ -12,6 +12,10 @@ spec:
       labels:
         app: hello-web
     spec:
+      initContainers:
+      - name: init-myservice
+        image: busybox
+        command: ['sh', '-c', 'until nslookup google.com; do echo waiting for google.com; sleep 2; done;']
       containers:
       - image: gcr.io/onehq-192515/hello-app:v1
         imagePullPolicy: IfNotPresent

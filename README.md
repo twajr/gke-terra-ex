@@ -61,6 +61,25 @@ $ kubectl create secret generic db-user-pass \
   --from-file=./username.txt --from-file=./password.txt
 secret "db-user-pass" created
 ```
+### Init Containers
+Because Init Containers have separate images from app Containers, they have some advantages for start-up related code:
+
+  1. They can contain and run utilities that are not desirable to include in the app Container image for security reasons.
+  1. They can contain utilities or custom code for setup that is not present in an app image. For example, there is no need to make an image FROM another image just to use a tool like sed, awk, python, or dig during setup.
+  1. The application image builder and deployer roles can work independently without the need to jointly build a single app image.
+  1. They use Linux namespaces so that they have different filesystem views from app Containers. Consequently, they can be given access to Secrets that app Containers are not able to access.
+  1. They run to completion before any app Containers start, whereas app Containers run in parallel, so Init Containers provide an easy way to block or delay the startup of app Containers until some set of preconditions are met.
+
+```
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox
+  initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'sleep 2; done;']
+```
 ### Docker Build HelloNode
 export your project id:
 ```

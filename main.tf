@@ -49,6 +49,21 @@ resource "google_container_cluster" "primary" {
   }
 }
 
+// resource "google_dns_managed_zone" "oneHQ" {
+//   name        = "oneHQ-com"
+//   dns_name    = "oneHQ.com."
+//   description = "oneHQ.com DNS zone"
+// }
+// resource "google_dns_record_set" "dev-k8s-endpoint-oneHQ" {
+//   name  = "k8s.dev.${google_dns_managed_zone.oneHQ.dns_name}"
+//   type  = "A"
+//   ttl   = 300
+//
+//   managed_zone = "${google_dns_managed_zone.oneHQ.name}"
+//
+//   rrdatas = ["${google_container_cluster.primary.endpoint}"]
+// }
+
 output "cluster_name" {
   value = "${google_container_cluster.primary.name}"
 }
