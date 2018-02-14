@@ -36,7 +36,6 @@ max_nodes = "3"
 Running the terraform plan and apply goes something like this:
 ```
 terraform plan \
- -var-file="terraform.tfvars" \
  -var-file="~/.gcloud/gke-secrets.tfvars"
 ```
 ### Associating kubectl to the cluster
