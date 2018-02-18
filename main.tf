@@ -49,20 +49,25 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-// resource "google_dns_managed_zone" "HQ" {
-//   name        = "HQ-com"
-//   dns_name    = "HQ.com."
-//   description = "HQ.com DNS zone"
-// }
-// resource "google_dns_record_set" "dev-k8s-endpoint-oneHQ" {
-//   name  = "k8s.dev.${google_dns_managed_zone.HQ.dns_name}"
-//   type  = "A"
-//   ttl   = 300
-//
-//   managed_zone = "${google_dns_managed_zone.HQ.name}"
-//
-//   rrdatas = ["${google_container_cluster.primary.endpoint}"]
-// }
+resource "google_compute_global_address" "hello-ip" {
+  name = "first-cluster-hello-web-ip"
+  ip_version = "IPV4"
+}
+
+resource "google_dns_managed_zone" "twajr" {
+  name        = "twajr-net-zone"
+  dns_name    = "twajr.net."
+  description = "twajr.net DNS zone"
+}
+resource "google_dns_record_set" "hello-endpoint-twajr" {
+  name  = "hello.${google_dns_managed_zone.twajr.dns_name}"
+  type  = "A"
+  ttl   = 300
+
+  managed_zone = "${google_dns_managed_zone.twajr.name}"
+
+  rrdatas = ["${google_compute_global_address.hello-ip.address}"]
+}
 
 output "cluster_name" {
   value = "${google_container_cluster.primary.name}"
