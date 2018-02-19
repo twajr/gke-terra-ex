@@ -34,11 +34,13 @@ resource "kubernetes_namespace" "development" {
   metadata {
     name = "development"
   }
+  depends_on = ["google_container_cluster.primary"]
 }
 resource "kubernetes_namespace" "production" {
   metadata {
     name = "production"
   }
+  depends_on = ["google_container_cluster.primary"]
 }
 
 resource "google_container_cluster" "primary" {
@@ -80,6 +82,16 @@ resource "google_dns_managed_zone" "twajr" {
 
 resource "google_dns_record_set" "hello-endpoint-twajr" {
   name  = "hello.${google_dns_managed_zone.twajr.dns_name}"
+  type  = "A"
+  ttl   = 300
+
+  managed_zone = "${google_dns_managed_zone.twajr.name}"
+
+  rrdatas = ["${google_compute_global_address.hello-ip.address}"]
+}
+
+resource "google_dns_record_set" "goodbye-endpoint-twajr" {
+  name  = "goodbye.${google_dns_managed_zone.twajr.dns_name}"
   type  = "A"
   ttl   = 300
 
