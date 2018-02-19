@@ -2,6 +2,13 @@
 
 An example that demonstrates creating a gke cluster using terraform. The cluster includes the auto-scaling of nodes feature of gke. It also demonstrates most of the details required to actually use the cluster after stand up in that a Cloud DNS managed zone along with static IPs are created for the end applications. Associating the Kubernetes provider to the new cluster is demonstrated as well.  
 
+### Files
+  1. main.tf - terraform code
+  1. terraform.tfvars - terraform vars file automatically pulled in
+  1. hello-web.yaml - K8s deployment only
+  1. hello-web-service.yaml - K8s service only
+  1. hello-web-all.yaml - K8s deploy, service, and ingress combined
+
 ### Requirements
   1. gcloud sdk installed
   1. kubectl client installed
