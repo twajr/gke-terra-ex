@@ -23,6 +23,24 @@ provider "google" {
   zone        = "${var.zone}$"
 }
 
+provider "kubernetes" {
+  host = "${google_container_cluster.primary.endpoint}"
+  client_certificate = "${base64decode(google_container_cluster.primary.master_auth.0.client_certificate)}"
+  client_key = "${base64decode(google_container_cluster.primary.master_auth.0.client_key)}"
+  cluster_ca_certificate = "${base64decode(google_container_cluster.primary.master_auth.0.cluster_ca_certificate)}"
+}
+
+resource "kubernetes_namespace" "development" {
+  metadata {
+    name = "development"
+  }
+}
+resource "kubernetes_namespace" "production" {
+  metadata {
+    name = "production"
+  }
+}
+
 resource "google_container_cluster" "primary" {
   name = "first-cluster"
   zone = "${var.zone}"
@@ -59,6 +77,7 @@ resource "google_dns_managed_zone" "twajr" {
   dns_name    = "twajr.net."
   description = "twajr.net DNS zone"
 }
+
 resource "google_dns_record_set" "hello-endpoint-twajr" {
   name  = "hello.${google_dns_managed_zone.twajr.dns_name}"
   type  = "A"

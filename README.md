@@ -38,13 +38,31 @@ Running the terraform plan and apply goes something like this:
 terraform plan \
  -var-file="~/.gcloud/gke-secrets.tfvars"
 ```
-### Associating kubectl to the cluster
+### Associating kubectl to the Cluster Context
 Use gcloud to make sure the config defaults are accurate, and get the cluster credentials.
 ```
 gcloud config set project 'your-project-id'
 gcloud config set compute/zone us-central1-a
 gcloud container clusters get-credentials 'cluster-name'
 
+```
+### Associating the Kubernetes Provider
+One neat trick demonstrated in this example is associating the Kubernetes provider direclty to the newly created GKE cluster. This allows you to immediately start configuring the new cluster via the kubernetes provider. The pertinent code is below:
+```
+provider "kubernetes" {
+  host = "${google_container_cluster.primary.endpoint}"
+  client_certificate = "${base64decode(google_container_cluster.primary.master_auth.0.client_certificate)}"
+  client_key = "${base64decode(google_container_cluster.primary.master_auth.0.client_key)}"
+  cluster_ca_certificate = "${base64decode(google_container_cluster.primary.master_auth.0.cluster_ca_certificate)}"
+}
+```
+The example uses the Kubernetes provider to immediately create standard namespaces for the cluster.
+```
+resource "kubernetes_namespace" "development" {
+  metadata {
+    name = "development"
+  }
+}
 ```
 ### Creating secrets
 Say that some pods need to access a database. The username and password that the pods should use is in the files ./username.txt and ./password.txt on your local machine.
@@ -59,6 +77,16 @@ The kubectl create secret command packages these files into a Secret and creates
 $ kubectl create secret generic db-user-pass \
   --from-file=./username.txt --from-file=./password.txt
 secret "db-user-pass" created
+```
+
+Extraction of these secrets via environment variables is demonstrated in the companion kube-terra-ex project.
+### DNS, Deployments, and Applications
+This example now includes how to create a static IP for your containerized application as well as creating a Cloud DNS managed zone where ultimately the A-record for your application would be place. This is typically done with a Kubernetes 'Ingress' object, and this is demonstrated in the kube-terra-ex project. Below shows how the management of a global static IP address.
+```
+resource "google_compute_global_address" "hello-ip" {
+  name = "first-cluster-hello-web-ip"
+  ip_version = "IPV4"
+}
 ```
 ### Init Containers
 Because Init Containers have separate images from app Containers, they have some advantages for start-up related code:
