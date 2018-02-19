@@ -1,6 +1,6 @@
 # gke-terra-ex
 
-An example that demonstrates creating a gke cluster using terraform. The cluster includes the auto-scaling of nodes feature of gke.
+An example that demonstrates creating a gke cluster using terraform. The cluster includes the auto-scaling of nodes feature of gke. It also demonstrates most of the details required to actually use the cluster after stand up in that a Cloud DNS managed zone along with static IPs are created for the end applications. Associating the Kubernetes provider to the new cluster is demonstrated as well.  
 
 ### Requirements
   1. gcloud sdk installed
