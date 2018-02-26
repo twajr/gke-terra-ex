@@ -1,0 +1,7 @@
+apiVersion: extensions/v1beta1
+  kind:Ingress
+  metadata:  
+    name: hello-ingress
+    namespace: default  
+    annotations: kubernetes.io/ingress.global-static-ip-name: first-cluster-hello-web-ipspec:  
+    backend:    serviceName: hello-web    servicePort: 
