@@ -1,6 +1,6 @@
 # gke-terra-ex
 
-An example that demonstrates creating a gke cluster using terraform. The cluster includes the auto-scaling of nodes feature of gke. It also demonstrates most of the details required to actually use the cluster after stand up in that a Cloud DNS managed zone along with static IPs are created for the end applications. Associating the Kubernetes provider to the new cluster is demonstrated as well.  
+An example that demonstrates creating a gke cluster using terraform. The cluster includes the auto-scaling of nodes feature of gke. It also demonstrates most of the details required to actually use the cluster, in that a Cloud DNS managed zone along with static IPs are created for the end applications. Associating the Kubernetes provider to the new cluster is demonstrated as well.  
 
 The project uses a simple docker image from gcr.io called hello-app and shows pulling the image and pushing it to your project's container registry. The app is described here:
 
