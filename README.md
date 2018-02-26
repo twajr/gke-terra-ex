@@ -11,6 +11,7 @@ The project uses a simple docker image from gcr.io called hello-app and shows pu
   1. terraform.tfvars - terraform vars file automatically pulled in
   1. hello-web.yaml - K8s deployment only
   1. hello-web-service.yaml - K8s service only
+  1. hello-web-ingress.yaml - K8s ingress object that binds to a global static IP address defined via GCE
   1. hello-web-all.yaml - K8s deploy, service, and ingress combined
 
 ### Requirements
